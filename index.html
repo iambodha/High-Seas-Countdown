@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>High Seas Countdown</title>
+    <link rel="icon" type="image/svg+xml" href="https://highseas.hackclub.com/favicons/favicon.svg">
+    <style>
+        @font-face {
+            font-family: 'HighSeasFont';
+            src: url('https://highseas.hackclub.com/_next/static/media/0fc6f5e9d9c3e206-s.p.ttf') format('truetype');
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'HighSeasFont', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a3a8f, #0f4c81);
+            color: #ffffff;
+            text-align: center;
+            padding: 1rem;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .ocean {
+            height: 200px;
+            width: 100%;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .wave {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%233ca3d7" fill-opacity="0.3" d="M0,160L48,165.3C96,171,192,181,288,181.3C384,181,480,171,576,181.3C672,192,768,224,864,218.7C960,213,1056,171,1152,144C1248,117,1344,107,1392,101.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            position: absolute;
+            width: 200%;
+            height: 100%;
+            animation: wave 25s -3s linear infinite;
+            transform: translate3d(0, 0, 0);
+            opacity: 0.8;
+        }
+
+        .wave:nth-of-type(2) {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%233ca3d7" fill-opacity="0.5" d="M0,192L48,197.3C96,203,192,213,288,192C384,171,480,117,576,112C672,107,768,149,864,154.7C960,160,1056,128,1152,117.3C1248,107,1344,117,1392,122.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            animation: wave 20s linear reverse infinite;
+            opacity: 0.5;
+        }
+
+        .wave:nth-of-type(3) {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%233ca3d7" fill-opacity="0.7" d="M0,128L48,138.7C96,149,192,171,288,165.3C384,160,480,128,576,138.7C672,149,768,203,864,208C960,213,1056,171,1152,160C1248,149,1344,171,1392,181.3L1440,192L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            animation: wave 15s -1s linear infinite;
+            opacity: 0.2;
+        }
+
+        @keyframes wave {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-25%); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ship {
+            position: absolute;
+            font-size: 2.5rem;
+            animation: sailShip 30s linear infinite;
+            z-index: 2;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .ship:hover {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        .ship1 { animation-delay: 0s; top: 15%; }
+        .ship2 { animation-delay: -10s; top: 25%; font-size: 2rem; }
+        .ship3 { animation-delay: -20s; top: 35%; font-size: 1.8rem; }
+
+        .clicked-ship {
+            position: absolute;
+            font-size: 2rem;
+            z-index: 2;
+            animation: fadeOutUp 3s forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fadeOutUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) rotate(360deg);
+            }
+        }
+
+        @keyframes sailShip {
+            0% {
+                left: -100px;
+                transform: translateY(0px);
+            }
+            50% {
+                left: calc(100vw + 100px);
+                transform: translateY(10px);
+            }
+            50.001% {
+                left: -100px;
+                transform: translateY(0px);
+            }
+            100% {
+                left: -100px;
+                transform: translateY(0px);
+            }
+        }
+
+        .container {
+            position: relative;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            margin: 2rem auto;
+            width: 100%;
+            max-width: 600px;
+            z-index: 3;
+            backdrop-filter: blur(10px);
+            transform: translateY(50px);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(50px); }
+            50% { transform: translateY(55px); }
+            100% { transform: translateY(50px); }
+        }
+
+        .logo {
+            max-width: 150px;
+            margin: 0 auto 1rem;
+            display: block;
+            animation: floatLogo 3s ease-in-out infinite alternate;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        @keyframes floatLogo {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(10px); }
+        }
+
+        .secret-message {
+            position: fixed;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #fff, 0 0 20px #4177cd, 0 0 30px #3ca3d7; }
+            to { text-shadow: 0 0 15px #fff, 0 0 25px #4177cd, 0 0 35px #3ca3d7; }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .countdown-label {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            color: #3ca3d7;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .countdown-value {
+            background: linear-gradient(135deg, rgba(65, 119, 205, 0.5), rgba(60, 163, 215, 0.5));
+            padding: 1rem;
+            border-radius: 12px;
+            min-width: 80px;
+            font-size: 2.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .countdown-value:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(65, 119, 205, 0.6);
+        }
+
+        .countdown-unit {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-top: 0.5rem;
+            color: #3ca3d7;
+        }
+
+        @media (max-width: 600px) {
+            .title { font-size: 2.5rem; }
+            .countdown-value { min-width: 60px; font-size: 2rem; }
+            .container { padding: 1rem; }
+        }
+
+        .konami-active {
+            animation: rainbow 5s linear infinite;
+        }
+
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+    
+    <div class="ship ship1">⛵</div>
+    <div class="ship ship2">🚢</div>
+    <div class="ship ship3">⛵</div>
+
+    <img src="https://highseas.hackclub.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Flogo.c573d503.png&w=256&q=75" alt="High Seas Logo" class="logo">
+
+    <div class="container" id="clock-container">
+        <h1 class="title">High Seas</h1>
+        <p class="subtitle">Adventure Ends January 31, 2025</p>
+        <div class="countdown-label">Time Until Journey Ends</div>
+        <div id="countdown" class="countdown"></div>
+    </div>
+
+    <audio id="wave-sound" preload="auto">
+        <source src="/api/placeholder/wave.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="ship-sound" preload="auto">
+        <source src="/api/placeholder/ship.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="click-sound" preload="auto">
+        <source src="/api/placeholder/click.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        let targetDate = new Date('January 31, 2025 23:59:59');
+        let konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        let konamiIndex = 0;
+        let clickCount = 0;
+        let secretMessages = [
+            "Ahoy, sailor! 🏴‍☠️",
+            "X marks the spot! ✖️",
+            "Land ho! 🏝️",
+            "Thar be treasure! 💎",
+            "Yo ho ho! 🍺"
+        ];
+
+        const waveSound = document.getElementById('wave-sound');
+        const shipSound = document.getElementById('ship-sound');
+        const clickSound = document.getElementById('click-sound');
+
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName.toLowerCase() !== 'img' && 
+                !e.target.classList.contains('countdown-value') &&
+                !e.target.classList.contains('ship')) {
+                const ship = document.createElement('div');
+                ship.className = 'clicked-ship';
+                ship.textContent = ['⛵', '🚢', '⚓'][Math.floor(Math.random() * 3)];
+                ship.style.left = e.clientX + 'px';
+                ship.style.top = e.clientY + 'px';
+                document.body.appendChild(ship);
+                
+                clickSound.currentTime = 0;
+                clickSound.play();
+
+                setTimeout(() => ship.remove(), 3000);
+            }
+        });
+
+        document.querySelectorAll('.ship').forEach(ship => {
+            ship.addEventListener('click', function(e) {
+                e.stopPropagation();
+                clickCount++;
+                
+                shipSound.currentTime = 0;
+                shipSound.play();
+
+                const message = document.createElement('div');
+                message.className = 'secret-message';
+                message.textContent = secretMessages[Math.floor(Math.random() * secretMessages.length)];
+                message.style.left = e.clientX + 'px';
+                message.style.top = e.clientY + 'px';
+                document.body.appendChild(message);
+
+                setTimeout(() => message.style.opacity = '1', 0);
+                setTimeout(() => {
+                    message.style.opacity = '0';
+                    setTimeout(() => message.remove(), 300);
+                }, 2000);
+
+                if (clickCount >= 10) {
+                    alert('Konami Code Activated! 🏴‍☠️');
+                    document.body.classList.add('konami-active');
+                }
+            });
+        });
+
+        function updateCountdown() {
+            const now = new Date();
+            const timeDifference = targetDate - now;
+
+            if (timeDifference > 0) {
+                const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+
+                document.getElementById('countdown').innerHTML = `
+                    <div class="countdown-item">
+                        <div class="countdown-value">${days}</div>
+                        <div class="countdown-unit">days</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value">${hours}</div>
+                        <div class="countdown-unit">hours</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value">${minutes}</div>
+                        <div class="countdown-unit">minutes</div>
+                    </div>
+                    <div class="countdown-item">
+                        <div class="countdown-value">${seconds}</div>
+                        <div class="countdown-unit">seconds</div>
+                    </div>
+                `;
+            } else {
+                document.getElementById('countdown').innerHTML = '<div class="countdown-value">The voyage has ended!</div>';
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    alert('Konami Code Activated! 🏴‍☠️');
+                    document.body.classList.add('konami-active');
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
+
+    </script>
+</body>
+</html>
